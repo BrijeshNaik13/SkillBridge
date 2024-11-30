@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IAS Quiz Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            font-family: 'Orbitron', sans-serif;
+        }
+        .glowing-border {
+            border: 2px solid transparent;
+            background-image: linear-gradient(#1e293b, #1e293b), linear-gradient(135deg, #6366f1, #8b5cf6, #3b82f6);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+        .option-hover:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+    <div class="container mx-auto px-4 max-w-2xl">
+        <div id="quiz-container" class="bg-gray-800 rounded-2xl shadow-2xl glowing-border p-8 space-y-6">
+            <div id="progress-container" class="mb-4 bg-gray-700 rounded-full h-2.5 w-full">
+                <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 h-2.5 rounded-full" style="width: 0%;"></div>
+            </div>
+            
+            <div id="question-container" class="text-center">
+                <h1 id="question-text" class="text-2xl font-bold mb-6 text-gray-200"></h1>
+                
+                <div id="options-container" class="grid grid-cols-2 gap-4">
+                    <button id="option-a" class="option-hover bg-gray-700 text-gray-300 py-4 px-4 rounded-xl text-lg font-medium transition-all hover:bg-indigo-600"></button>
+                    <button id="option-b" class="option-hover bg-gray-700 text-gray-300 py-4 px-4 rounded-xl text-lg font-medium transition-all hover:bg-indigo-600"></button>
+                    <button id="option-c" class="option-hover bg-gray-700 text-gray-300 py-4 px-4 rounded-xl text-lg font-medium transition-all hover:bg-indigo-600"></button>
+                    <button id="option-d" class="option-hover bg-gray-700 text-gray-300 py-4 px-4 rounded-xl text-lg font-medium transition-all hover:bg-indigo-600"></button>
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center mt-6">
+                <div id="question-counter" class="text-gray-400 text-sm"></div>
+                <div class="flex items-center space-x-4">
+                    <div id="hints-left" class="text-gray-400 text-sm mr-4">Hints: 3</div>
+                    <button id="hint-btn" class="bg-purple-600 text-white py-2 px-4 rounded-lg text-sm hover:bg-purple-700 transition-all">
+                        Get Hint
+                    </button>
+                    <div id="timer" class="text-gray-400 text-sm"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="result-container" class="hidden text-center bg-gray-800 rounded-2xl p-8 space-y-6 glowing-border">
+            <h2 class="text-3xl font-bold text-gray-200">Quiz Completed!</h2>
+            <p id="score-text" class="text-2xl text-gray-300"></p>
+            <div id="result-details" class="text-gray-400"></div>
+            <button id="restart-btn" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 text-white py-3 px-6 rounded-xl text-lg font-medium hover:opacity-90 transition-all">
+                Restart Quiz
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+    { question: "Who was the first Prime Minister of India?", options: ["Mahatma Gandhi", "Jawaharlal Nehru", "Sardar Patel", "Subhash Chandra Bose"], correct: 1, hint: "He is also known as Pandit Nehru." },
+    { question: "What is the capital of India?", options: ["Mumbai", "Delhi", "Kolkata", "Chennai"], correct: 1, hint: "It is home to India Gate and Rashtrapati Bhavan." },
+    { question: "Who wrote the Indian national anthem?", options: ["Lal Bahadur Shastri", "Rabindranath Tagore", "Mahatma Gandhi", "Subhash Chandra Bose"], correct: 1, hint: "He was awarded the Nobel Prize for literature." },
+    { question: "What is the national flower of India?", options: ["Rose", "Lotus", "Tulip", "Sunflower"], correct: 1, hint: "It is associated with purity in Indian culture." },
+    { question: "Who was the first woman Prime Minister of India?", options: ["Indira Gandhi", "Sonia Gandhi", "Pratibha Patil", "Sarojini Naidu"], correct: 0, hint: "She was the daughter of Jawaharlal Nehru." },
+    { question: "Who gave the slogan 'Give me blood, and I will give you freedom'?", options: ["Bhagat Singh", "Subhash Chandra Bose", "Lala Lajpat Rai", "Chandra Shekhar Azad"], correct: 1, hint: "He was known as Netaji." },
+    { question: "What is the currency of India?", options: ["Rupee", "Dollar", "Pound", "Yen"], correct: 0, hint: "The symbol of this currency was designed by D. Udaya Kumar." },
+    { question: "Which is the longest river in India?", options: ["Ganga", "Yamuna", "Brahmaputra", "Narmada"], correct: 0, hint: "It is considered sacred in Hinduism." },
+    { question: "Who is known as the 'Father of the Nation' in India?", options: ["Jawaharlal Nehru", "Subhash Chandra Bose", "Mahatma Gandhi", "Lal Bahadur Shastri"], correct: 2, hint: "He led the non-violent movement for India's independence." },
+    { question: "Which is the largest state in India by area?", options: ["Madhya Pradesh", "Rajasthan", "Uttar Pradesh", "Maharashtra"], correct: 1, hint: "It is known for its deserts and palaces." },
+    { question: "What is the national animal of India?", options: ["Lion", "Elephant", "Tiger", "Deer"], correct: 2, hint: "It is the apex predator of Indian forests." },
+    { question: "Who is the current President of India?", options: ["Pratibha Patil", "Ram Nath Kovind", "Droupadi Murmu", "Narendra Modi"], correct: 2, hint: "She is the first woman from Odisha to hold the position." },
+    { question: "Who invented the zero?", options: ["Aryabhata", "Brahmagupta", "Bhaskaracharya", "Varahamihira"], correct: 1, hint: "This mathematician wrote the book 'Brahmasphutasiddhanta'." },
+    { question: "Which year did India gain independence?", options: ["1947", "1950", "1942", "1930"], correct: 0, hint: "It was on August 15th." },
+    { question: "Which is the smallest state in India by area?", options: ["Goa", "Sikkim", "Kerala", "Uttarakhand"], correct: 0, hint: "It is famous for its beaches and Portuguese influence." },
+    { question: "Which country shares the longest border with India?", options: ["Bangladesh", "China", "Pakistan", "Nepal"], correct: 1, hint: "It is located to the north of India." },
+    { question: "What is the national bird of India?", options: ["Peacock", "Eagle", "Parrot", "Crow"], correct: 0, hint: "It is a symbol of grace and beauty." },
+    { question: "What is the official language of India?", options: ["Hindi", "English", "Bengali", "Tamil"], correct: 0, hint: "It is one of the most widely spoken languages in the country." },
+    { question: "Which is the highest civilian award in India?", options: ["Padma Bhushan", "Padma Shri", "Bharat Ratna", "Padma Vibhushan"], correct: 2, hint: "It is awarded for exceptional service in various fields." },
+    { question: "Which Indian city is known as the 'City of Joy'?", options: ["Mumbai", "Kolkata", "Chennai", "Bangalore"], correct: 1, hint: "It is the capital of West Bengal." },
+    { question: "What is the national tree of India?", options: ["Bamboo", "Neem", "Peepal", "Banyan"], correct: 3, hint: "It is the symbol of immortality." },
+    { question: "Who was the last Governor-General of independent India?", options: ["Rajagopalachari", "C. Rajagopalachari", "Lord Mountbatten", "V. V. Giri"], correct: 0, hint: "He was also the first Indian to hold the post after independence." },
+    { question: "Which of these is a World Heritage Site in India?", options: ["Red Fort", "Taj Mahal", "Qutub Minar", "All of the above"], correct: 3, hint: "They are famous historical landmarks in India." },
+    { question: "Who was the first woman to win a Nobel Prize?", options: ["Marie Curie", "Indira Gandhi", "Sarojini Naidu", "Kalpana Chawla"], correct: 0, hint: "She won Nobel Prizes in Physics and Chemistry." },
+    { question: "Which is the largest river island in India?", options: ["Majuli", "Sundarbans", "Kochi", "Andaman"], correct: 0, hint: "It is located in the Brahmaputra River." },
+    { question: "Who was the founder of the Indian National Congress?", options: ["Lala Lajpat Rai", "A.O. Hume", "Bal Gangadhar Tilak", "Subhash Chandra Bose"], correct: 1, hint: "He was a British civil servant." },
+    { question: "Which is the largest dam in India?", options: ["Bhakra Nangal Dam", "Sardar Sarovar Dam", "Tehri Dam", "Kosi Barrage"], correct: 1, hint: "It is located on the Narmada River." },
+    { question: "What is the national emblem of India?", options: ["Lion Capital of Ashoka", "Elephant", "Peacock", "Gandhi's Statue"], correct: 0, hint: "It features four lions standing back to back." },
+    { question: "What is the national motto of India?", options: ["Jai Hind", "Satyamev Jayate", "Bharat Mata ki Jai", "Vande Mataram"], correct: 1, hint: "It translates to 'Truth Alone Triumphs'." },
+    { question: "Which is the largest state by population in India?", options: ["Maharashtra", "Uttar Pradesh", "Bihar", "Tamil Nadu"], correct: 1, hint: "It is located in the northern part of India." },
+    { question: "What is the official name of India?", options: ["Republic of India", "Indian Union", "Bharat", "Hindustan"], correct: 0, hint: "It is a sovereign state." },
+    { question: "Which of the following is a popular dance form of Tamil Nadu?", options: ["Kathak", "Bharatanatyam", "Kathakali", "Manipuri"], correct: 1, hint: "It originated in the temples of Tamil Nadu." },
+    { question: "Who was the first Indian to win an Oscar?", options: ["A.R. Rahman", "Satyajit Ray", "Bhanu Athaiya", "Irrfan Khan"], correct: 2, hint: "She won for costume design in 1982." },
+    { question: "Which city is known as the 'Silicon Valley of India'?", options: ["Hyderabad", "Bangalore", "Chennai", "Mumbai"], correct: 1, hint: "It is a hub for IT companies in India." },
+    { question: "What is the oldest language in India?", options: ["Hindi", "Sanskrit", "Tamil", "Bengali"], correct: 2, hint: "It is the language of ancient South India." }
+];
+
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let hintsLeft = 3;
+
+        const questionText = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("options-container");
+        const options = [
+            document.getElementById("option-a"),
+            document.getElementById("option-b"),
+            document.getElementById("option-c"),
+            document.getElementById("option-d")
+        ];
+        const progressBar = document.getElementById("progress-bar");
+        const questionCounter = document.getElementById("question-counter");
+        const hintsLeftText = document.getElementById("hints-left");
+        const hintBtn = document.getElementById("hint-btn");
+        const resultContainer = document.getElementById("result-container");
+        const quizContainer = document.getElementById("quiz-container");
+        const scoreText = document.getElementById("score-text");
+        const restartBtn = document.getElementById("restart-btn");
+
+        function loadQuestion() {
+            const question = questions[currentQuestionIndex];
+            questionText.textContent = question.question;
+            options.forEach((button, index) => {
+                button.textContent = question.options[index];
+                button.classList.remove("bg-green-500", "bg-red-500");
+                button.disabled = false;
+            });
+            questionCounter.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+        }
+
+        function selectAnswer(index) {
+            const question = questions[currentQuestionIndex];
+            if (index === question.correct) {
+                options[index].classList.add("bg-green-500");
+                score++;
+            } else {
+                options[index].classList.add("bg-red-500");
+            }
+            options.forEach(button => (button.disabled = true));
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    showResults();
+                }
+            }, 1000);
+        }
+
+        function useHint() {
+            if (hintsLeft > 0) {
+                hintsLeft--;
+                hintsLeftText.textContent = `Hints: ${hintsLeft}`;
+                alert(questions[currentQuestionIndex].hint);
+            } else {
+                alert("No hints left!");
+            }
+        }
+
+        function showResults() {
+            quizContainer.classList.add("hidden");
+            resultContainer.classList.remove("hidden");
+            scoreText.textContent = `You scored ${score} out of ${questions.length}`;
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            hintsLeft = 3;
+            hintsLeftText.textContent = `Hints: ${hintsLeft}`;
+            resultContainer.classList.add("hidden");
+            quizContainer.classList.remove("hidden");
+            loadQuestion();
+        }
+
+        options.forEach((button, index) => {
+            button.addEventListener("click", () => selectAnswer(index));
+        });
+        hintBtn.addEventListener("click", useHint);
+        restartBtn.addEventListener("click", restartQuiz);
+
+        loadQuestion();
+    </script>
+</body>
+</html>

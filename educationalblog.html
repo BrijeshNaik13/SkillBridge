@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge : Educational Way</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for better visuals */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+        }
+
+        section h2 {
+            margin-bottom: 10px;
+            border-bottom: 3px solid #10b981;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .grid div:hover {
+            transform: translateY(-5px);
+            transition: 0.3s ease-in-out;
+        }
+
+        footer {
+            background-color: #1f2937;
+            color: white;
+        }
+    </style>
+    <script>
+        // JavaScript for dynamic interactions
+        document.addEventListener("DOMContentLoaded", () => {
+            const themeToggle = document.getElementById("themeToggle");
+
+            themeToggle.addEventListener("click", () => {
+                document.documentElement.classList.toggle("dark");
+                themeToggle.textContent = document.documentElement.classList.contains("dark") 
+                    ? "Light Mode" 
+                    : "Dark Mode";
+            });
+        });
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-gray-300">
+
+    <!-- Header
+    <header class="py-6 text-center">
+        <h1 class="text-4xl font-bold">Educational Way</h1>
+        <p class="mt-2 text-lg">Empowering Indian Students for a Brighter Future</p>
+        <button id="themeToggle" class="mt-4 bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">Dark Mode</button>
+    </header> -->
+
+    <!-- Main Content -->
+    <main class="py-12 px-6">
+        <!-- Introduction -->
+        <section id="introduction" class="mb-12">
+            <h2 class="text-3xl font-semibold">What is Educational Way?</h2>
+            <p class="mt-4 text-lg leading-relaxed">Educational Way is a platform that provides information and resources to students pursuing various fields, including Medicine, Engineering, Accounting, Teaching, and Civil Services (IAS).</p>
+            
+        </section>
+
+        <!-- Domains Section -->
+        <section id="domains">
+            <h2 class="text-3xl font-semibold text-center">Explore Our Domains</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+                <!-- Card Template -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">Medical</h3>
+                    <p class="mt-2">Medicine is a noble profession involving the diagnosis, treatment, and prevention of diseases.</p>
+                    <img src="./assets/images/MEDICAL.JPG" alt="Medical" class="rounded-lg mt-4 shadow-md">
+                    <ul class="mt-4 list-disc list-inside text-sm">
+                        <li>Competitive exams: NEET, AIIMS</li>
+                        <li>Degrees: MBBS, MD</li>
+                        <li>Essentials: Internship, Licensure</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">Engineering</h3>
+                    <p class="mt-2">Engineering applies scientific principles to design and build structures and systems.</p>
+                    <img src="./assets/images/allllengineers.jpg" alt="Engineering" class="rounded-lg mt-4 shadow-md">
+                    <ul class="mt-4 list-disc list-inside text-sm">
+                        <li>Competitive exams: JEE, GATE</li>
+                        <li>Degrees: B.Tech, M.Tech</li>
+                        <li>Essentials: Projects, Internships</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">Accounting</h3>
+                    <p class="mt-2">Accounting is about recording and reporting financial information for businesses.</p>
+                    <img src="./assets/images/accountant - Copy.jpg">
+                    <ul class="mt-4 list-disc list-inside text-sm">
+                        <li>Competitive exams: CA, CMA</li>
+                        <li>Degrees: B.Com, M.Com</li>
+                        <li>Essentials: Articleship, Certification</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">Teaching</h3>
+                    <p class="mt-2">Teaching involves imparting knowledge and skills to students of all ages.</p>
+                    <img src="./assets/images/teacher.jpg">
+                    <ul class="mt-4 list-disc list-inside text-sm">
+                        <li>Competitive exams: CTET, NET</li>
+                        <li>Degrees: B.Ed, M.Ed</li>
+                        <li>Essentials: Teaching Experience, Certification</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">IAS (Civil Services)</h3>
+                    <p class="mt-2">IAS is the backbone of the Indian government, implementing policies and programs.</p>
+                    <img src="./assets/images/IAS officer icon.png">
+                    <ul class="mt-4 list-disc list-inside text-sm">
+                        <li>Competitive exams: UPSC</li>
+                        <li>Degrees: Any graduate degree</li>
+                        <li>Essentials: Preparation, Interview</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

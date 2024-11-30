@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge: Educational Fields Game</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(./educational.jpg);
+    background-size: cover;
+    background-position: center;
+    opacity: 0.2;
+    mix-blend-mode: overlay;
+    z-index: -1;
+}
+        .container {
+            max-width: 800px;
+            /* margin: 40px auto; */
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .text-center{
+            /* font-size: 2rem; */
+            color: rgb(248, 249, 250);
+        }
+        .list-group-item {
+            display: flex;
+            align-items: center;
+            background-color: #f7f7f7;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .list-group-item img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        .list-group-item:hover {
+            background-color: #e5e5e5;
+            transform: scale(1.1);
+        }
+
+        .selected {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        #result {
+            font-size: 24px;
+            font-weight: bold;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #3498db;
+        }
+
+        p {
+            color: #666;
+        }
+
+        #result{
+            color: white;
+        }
+
+        a:hover{
+            text-decoration: none;
+        }
+
+        #fields a{
+            margin: 2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-image"></div>
+    <div class="container">
+        <h1 class="text-center text-4xl md:text-6xl font-bold mb-4">Educational Fields Game</h1>
+        <p class="text-center text-xl md:text-2xl mb-6">Choose your dream career!</p>
+        <div id="fields">
+            <a href="teacher.html"><div class="list-group-item" data-field="Teacher">
+                <img src="https://img.icons8.com/color/48/000000/teacher.png">
+                <span>Teacher</span>
+            </div>
+            </a>
+            <a href="eng.html">
+            <div class="list-group-item" data-field="Engineer">
+                <img src="https://img.icons8.com/color/48/000000/engineer.png">
+                <span>Engineer</span>
+            </div>
+        </a>
+            <a href="doctor.html">
+            <div class="list-group-item" data-field="Doctor">
+                <img src="https://img.icons8.com/color/48/000000/doctor-male.png">
+                <span>Doctor</span>
+            </div>
+            </a>
+            <a href="acountant.html">
+            <div class="list-group-item" data-field="Accountant">
+                <img src="https://img.icons8.com/color/48/000000/accounting.png">
+                <span>Accountant</span>
+            </div>
+
+            </a><a href="ias.html">
+
+            <div class="list-group-item" data-field="IAS">
+                <img src="https://img.bumppy.com/bumppy/2022/03/612ad1919c8e0293fa7eb2e9b7247ea5-2.jpeg">
+                <span>IAS</span>
+            </div></a>
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const fieldsDiv = document.getElementById('fields');
+        const resultDiv = document.getElementById('result');
+        let selectedField = null;
+
+        fieldsDiv.addEventListener('click', (e) => {
+            if (e.target.classList.contains('list-group-item')) {
+                const field = e.target.getAttribute('data-field');
+                if (selectedField === field) {
+                    selectedField = null;
+                    e.target.classList.remove('selected');
+                } else {
+                    selectedField = field;
+                    fieldsDiv.querySelectorAll('.list-group-item').forEach((item) => {
+                        item.classList.remove('selected');
+                    });
+                    e.target.classList.add('selected');
+                }
+                resultDiv.innerHTML = `You have selected: ${selectedField}`;
+            }
+        });
+    </script>
+</body>
+</html>

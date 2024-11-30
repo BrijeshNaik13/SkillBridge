@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Paths</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for better visuals */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+        }
+
+        section h2 {
+            margin-bottom: 10px;
+            border-bottom: 3px solid #10b981;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .grid div:hover {
+            transform: translateY(-5px);
+            transition: 0.3s ease-in-out;
+        }
+
+        footer {
+            background-color: #1f2937;
+            color: white;
+        }
+    </style>
+    <script>
+        // JavaScript for dynamic interactions
+        document.addEventListener("DOMContentLoaded", () => {
+            const themeToggle = document.getElementById("themeToggle");
+
+            themeToggle.addEventListener("click", () => {
+                document.documentElement.classList.toggle("dark");
+                themeToggle.textContent = document.documentElement.classList.contains("dark")
+                    ? "Light Mode"
+                    : "Dark Mode";
+            });
+        });
+    </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-gray-300">
+
+
+    <!-- Main Content -->
+    <main class="py-12 px-6">
+        <!-- Introduction -->
+        <section id="introduction" class="mb-12">
+            <h2 class="text-3xl font-semibold">What is Non-Educational Way?</h2>
+            <p class="mt-4 text-lg leading-relaxed">Non-Educational Way refers to a path, platform, or approach that provides information, resources, and services for personal and professional development, hobbies, and interests outside of formal education and academics.</p>
+            
+        </section>
+
+        <!-- Career Paths Section -->
+        <section id="career-paths">
+            <h2 class="text-3xl font-semibold text-center">Explore Career Paths</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+                <!-- Card Template -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">Professional Sports</h3>
+                    <p class="mt-2">Pursue a career in sports as an athlete, coach, or sports manager.</p>
+                    <img src="./assets/images/Professional Sports.png" alt="Sports"
+                        class="rounded-lg mt-4 shadow-md">
+                    <ul class="mt-4 list-disc list-inside text-sm">
+                        <li>Competitive exams: Sports trials, tournaments</li>
+                        <li>Essentials: Physical training, teamwork</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">Digital Content Creation</h3>
+                    <p class="mt-2">Create engaging content for various platforms, such as YouTube, TikTok, or blogs.
+                    </p>
+                    <img src="./assets/images/Digital Content Creation.png"
+                        class="rounded-lg mt-4 shadow-md">
+                    <ul class="mt-4 list-disc list-inside text-sm">
+                        <li>Essentials: Content creation skills, consistency</li>
+                        <li>Monetization: Advertisements, sponsorships</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">Acting and Performing Arts</h3>
+                    <p class="mt-2">Pursue a career in acting, dancing, or other performing arts.</p>
+                    <img src="./assets/images/Acting and Performing Arts.png"  alt="Acting"
+                        class="rounded-lg mt-4 shadow-md">
+                    <ul class="mt-4 list-disc list-inside text-sm">
+                        <li>Auditions and workshops</li>
+                        <li>Essentials: Acting skills, physical expression</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold">Fitness and Wellness</h3>
+                    <p class="mt-2">Pursue a career in fitness training, nutrition, or wellness coaching.</p>
+                    <img src="./assets/images/Fitness and Wellness.png" alt="Fitness"
+                        class="rounded-lg mt-4 shadow-md">
+                    <ul class="mt-4 list-disc list-inside text-sm">
+                        <li>Certifications: Personal training, nutrition</li>
+                        <li>Essentials: Physical fitness, communication skills</li>
+                    </ul>
+                </div>
+
+               
+
+           
+
+                
+                
+            </div>
+        </section>
+    </main>
+
+   
+</body>
+
+</html>

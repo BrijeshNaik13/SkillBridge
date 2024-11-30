@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Budget Balancer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+        }
+        /* Custom Tailwind-like styles for game-specific effects */
+        @keyframes glow {            
+            0%, 100% { box-shadow: 0 0 5px rgba(14, 165, 233, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(14, 165, 233, 0.8); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .neon-border {
+            border: 2px solid transparent;
+            border-image: linear-gradient(to right, #0ea5e9, #22d3ee) 1;
+            animation: glow 2s infinite;
+        }
+        .difficulty-gradient {
+            background: linear-gradient(to right, #10b981, #eab308, #ef4444);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
+    <!-- Help Modal -->
+    <div id="helpModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+        <div class="bg-gray-800 p-8 rounded-lg max-w-md w-full text-center neon-border">
+            <h2 class="text-2xl font-bold mb-4 text-cyan-400">How to Play Budget Balancer</h2>
+            <p class="mb-4 text-gray-300">
+                Your goal is to allocate a fixed budget across various expense categories without overspending.
+                Use sliders to distribute your budget wisely. Each level increases in complexity!
+            </p>
+            <ul class="text-left mb-6 space-y-2 text-gray-400">
+                <li>✦ Level 1: Basic budget allocation</li>
+                <li>✦ Level 2: More categories, tighter budget</li>
+                <li>✦ Level 3: Random events challenge you</li>
+            </ul>
+            <button id="closeHelpBtn" class="bg-cyan-600 hover:bg-cyan-500 text-white px-6 py-2 rounded-lg transition-all">
+                Got It!
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Game Container -->
+    <div id="gameContainer" class="w-full max-w-4xl">
+        <!-- Game Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-cyan-400">Budget Balancer</h1>
+            <div class="flex items-center space-x-4">
+                <button id="helpButton" class="text-cyan-300 hover:text-cyan-100 transition-colors">
+                    ❓ Help
+                </button>
+                <button id="restartButton" class="bg-red-600 hover:bg-red-500 px-4 py-2 rounded-lg text-white transition-colors hidden">
+                    Restart Game
+                </button>
+            </div>
+        </div>
+
+        <!-- Game Status Bar -->
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <div class="bg-gray-800 p-4 rounded-lg neon-border">
+                <p class="text-sm text-gray-400">Level</p>
+                <p id="levelDisplay" class="text-2xl font-bold text-cyan-400">1</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg neon-border">
+                <p class="text-sm text-gray-400">Total Budget</p>
+                <p id="budgetDisplay" class="text-2xl font-bold text-green-400">$5000</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-lg neon-border">
+                <p class="text-sm text-gray-400">Time Remaining</p>
+                <p id="timerDisplay" class="text-2xl font-bold text-yellow-400">60s</p>
+            </div>
+        </div>
+
+        <!-- Difficulty Indicator -->
+        <div class="w-full h-2 mb-6 rounded-full difficulty-gradient" id="difficultyBar"></div>
+
+        <!-- Expense Categories -->
+        <div id="categoriesContainer" class="space-y-4"></div>
+
+        <!-- Remaining Budget -->
+        <div class="mt-6 bg-gray-800 p-4 rounded-lg neon-border">
+            <div class="flex justify-between items-center">
+                <p class="text-gray-400">Remaining Budget</p>
+                <p id="remainingBudgetDisplay" class="text-2xl font-bold text-green-400">$5000</p>
+            </div>
+        </div>
+
+        <!-- Next Level / Submit Button -->
+        <div class="mt-6 text-center">
+            <button id="submitButton" class="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-lg text-xl transition-all">
+                Submit Budget
+            </button>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+        <div class="bg-gray-800 p-8 rounded-lg max-w-md w-full text-center neon-border">
+            <h2 id="feedbackTitle" class="text-2xl font-bold mb-4 text-cyan-400">Feedback Title</h2>
+            <p id="feedbackMessage" class="mb-6 text-gray-300">Feedback message goes here</p>
+            <div class="flex justify-center space-x-4">
+                <button id="continueButton" class="bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-lg transition-all">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Game Configuration
+    const GAME_LEVELS = [
+        {
+            level: 1,
+            budget: 5000,
+            time: 60,
+            categories: [
+                { name: 'Housing', min: 1000, max: 2000 },
+                { name: 'Transportation', min: 500, max: 1000 },
+                { name: 'Food', min: 300, max: 800 },
+                { name: 'Utilities', min: 200, max: 500 }
+            ]
+        },
+        {
+            level: 2,
+            budget: 7500,
+            time: 45,
+            categories: [
+                { name: 'Housing', min: 1500, max: 2500 },
+                { name: 'Transportation', min: 700, max: 1200 },
+                { name: 'Food', min: 500, max: 1000 },
+                { name: 'Utilities', min: 300, max: 600 },
+                { name: 'Entertainment', min: 200, max: 500 },
+                { name: 'Insurance', min: 100, max: 400 }
+            ]
+        },
+        {
+            level: 3,
+            budget: 10000,
+            time: 30,
+            categories: [
+                { name: 'Housing', min: 2000, max: 3000 },
+                { name: 'Transportation', min: 1000, max: 1500 },
+                { name: 'Food', min: 700, max: 1200 },
+                { name: 'Utilities', min: 400, max: 700 },
+                { name: 'Entertainment', min: 300, max: 600 },
+                { name: 'Insurance', min: 200, max: 500 },
+                { name: 'Savings', min: 100, max: 400 },
+                { name: 'Emergency Fund', min: 50, max: 300 }
+            ]
+        }
+    ];
+
+    // Game State
+    let currentLevel = 0;
+    let currentScore = 0;
+    let timer;
+
+    // DOM Elements
+    const gameContainer = document.getElementById('gameContainer');
+    const categoriesContainer = document.getElementById('categoriesContainer');
+    const levelDisplay = document.getElementById('levelDisplay');
+    const budgetDisplay = document.getElementById('budgetDisplay');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const remainingBudgetDisplay = document.getElementById('remainingBudgetDisplay');
+    const submitButton = document.getElementById('submitButton');
+    const restartButton = document.getElementById('restartButton');
+    const helpButton = document.getElementById('helpButton');
+    const helpModal = document.getElementById('helpModal');
+    const closeHelpBtn = document.getElementById('closeHelpBtn');
+    const feedbackModal = document.getElementById('feedbackModal');
+    const feedbackTitle = document.getElementById('feedbackTitle');
+    const feedbackMessage = document.getElementById('feedbackMessage');
+    const continueButton = document.getElementById('continueButton');
+    const difficultyBar = document.getElementById('difficultyBar');
+
+    // Initialize Game
+    function initializeGame() {
+        const levelConfig = GAME_LEVELS[currentLevel];
+        
+        // Reset UI
+        categoriesContainer.innerHTML = '';
+        levelDisplay.textContent = levelConfig.level;
+        budgetDisplay.textContent = `$${levelConfig.budget}`;
+        remainingBudgetDisplay.textContent = `$${levelConfig.budget}`;
+
+        // Create category inputs
+        levelConfig.categories.forEach(category => {
+            const categoryElement = document.createElement('div');
+            categoryElement.className = 'bg-gray-800 p-4 rounded-lg neon-border flex items-center space-x-4';
+            categoryElement.innerHTML = `
+                <span class="w-1/4 text-cyan-400">${category.name}</span>
+                <input 
+                    type="range" 
+                    min="0" 
+                    max="${category.max}" 
+                    value="0" 
+                    class="flex-grow slider category-input"
+                    data-min="${category.min}"
+                    data-max="${category.max}"
+                    data-name="${category.name}"
+                >
+                <span id="${category.name.toLowerCase().replace(' ', '-')}-value" class="w-1/4 text-green-400">$0</span>
+            `;
+            categoriesContainer.appendChild(categoryElement);
+        });
+
+        // Add event listeners to sliders
+        const sliders = document.querySelectorAll('.category-input');
+        sliders.forEach(slider => {
+            slider.addEventListener('input', updateBudgetAllocation);
+        });
+
+        // Start Timer
+        startTimer(levelConfig.time);
+
+        // Update difficulty bar
+        updateDifficultyBar();
+    }
+
+    // Update Budget Allocation
+    function updateBudgetAllocation() {
+        const levelConfig = GAME_LEVELS[currentLevel];
+        let totalAllocated = 0;
+        const sliders = document.querySelectorAll('.category-input');
+
+        sliders.forEach(slider => {
+            const value = parseInt(slider.value);
+            const valueDisplay = document.getElementById(`${slider.dataset.name.toLowerCase().replace(' ', '-')}-value`);
+            valueDisplay.textContent = `$${value}`;
+            totalAllocated += value;
+        });
+
+        const remainingBudget = levelConfig.budget - totalAllocated;
+        remainingBudgetDisplay.textContent = `$${remainingBudget}`;
+        remainingBudgetDisplay.className = remainingBudget < 0 
+            ? 'text-2xl font-bold text-red-400' 
+            : 'text-2xl font-bold text-green-400';
+
+        // Validate budget
+        submitButton.disabled = remainingBudget < 0;
+        submitButton.className = remainingBudget < 0
+            ? 'bg-gray-500 text-gray-300 px-8 py-3 rounded-lg text-xl cursor-not-allowed'
+            : 'bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-lg text-xl transition-all';
+    }
+
+    // Start Timer
+    function startTimer(duration) {
+        let timeRemaining = duration;
+        timerDisplay.textContent = `${timeRemaining}s`;
+
+        clearInterval(timer);
+        timer = setInterval(() => {
+            timeRemaining--;
+            timerDisplay.textContent = `${timeRemaining}s`;
+
+            if (timeRemaining <= 10) {
+                timerDisplay.className = 'text-2xl font-bold text-red-400';
+            }
+
+            if (timeRemaining <= 0) {
+                clearInterval(timer);
+                showFeedback('Time\'s Up!', 'You ran out of time. Better luck next time!', false);
+            }
+        }, 1000);
+    }
+
+    // Submit Budget
+    function submitBudget() {
+        const levelConfig = GAME_LEVELS[currentLevel];
+        const sliders = document.querySelectorAll('.category-input');
+        
+        // Validate minimum allocations
+        const isValidAllocation = levelConfig.categories.every((category, index) => {
+            const slider = sliders[index];
+            const allocated = parseInt(slider.value);
+            return allocated >= category.min && allocated <= category.max;
+        });
+
+        if (isValidAllocation) {
+            currentScore += calculateScore();
+            currentLevel++;
+
+            if (currentLevel < GAME_LEVELS.length) {
+                showFeedback(
+                    'Level Complete!', 
+                    `You successfully balanced the budget for Level ${currentLevel}. Moving to the next challenge!`,
+                    true
+                );
+            } else {
+                showFeedback(
+                    'Congratulations!', 
+                    `You completed all levels with a total score of ${currentScore}!`,
+                    false
+                );
+                restartButton.classList.remove('hidden');
+            }
+        } else {
+            showFeedback(
+                'Budget Allocation Invalid', 
+                'Some categories are not within their recommended ranges.',
+                false
+            );
+        }
+    }
+
+    // Calculate Score
+    function calculateScore() {
+        const levelConfig = GAME_LEVELS[currentLevel];
+        const timeBonus = parseInt(timerDisplay.textContent) * 10;
+        return timeBonus + (levelConfig.level * 100);
+    }
+
+    // Update Difficulty Bar
+    function updateDifficultyBar() {
+        const progress = ((currentLevel + 1) / GAME_LEVELS.length) * 100;
+        difficultyBar.style.background = `linear-gradient(to right, #10b981, #eab308, #ef4444 ${progress}%)`;
+    }
+
+    // Show Feedback Modal
+    function showFeedback(title, message, isSuccess) {
+        clearInterval(timer);
+        feedbackTitle.textContent = title;
+        feedbackMessage.textContent = message;
+        
+        feedbackModal.classList.remove('hidden');
+        feedbackModal.classList.add('flex');
+
+        continueButton.textContent = isSuccess ? 'Next Level' : 'Try Again';
+    }
+
+    // Close Feedback Modal and Continue/Restart Game
+    function continuePlaying() {
+        feedbackModal.classList.add('hidden');
+        feedbackModal.classList.remove('flex');
+
+        if (currentLevel < GAME_LEVELS.length) {
+            initializeGame();
+        } else {
+            resetGame();
+        }
+    }
+
+    // Reset Game to Initial State
+    function resetGame() {
+        currentLevel = 0;
+        currentScore = 0;
+        restartButton.classList.add('hidden');
+        initializeGame();
+    }
+
+    // Event Listeners
+    submitButton.addEventListener('click', submitBudget);
+    restartButton.addEventListener('click', resetGame);
+    helpButton.addEventListener('click', () => {
+        helpModal.classList.remove('hidden');
+        helpModal.classList.add('flex');
+    });
+    closeHelpBtn.addEventListener('click', () => {
+        helpModal.classList.add('hidden');
+        helpModal.classList.remove('flex');
+    });
+    continueButton.addEventListener('click', continuePlaying);
+
+    // Start the game when the page loads
+    initializeGame();
+    </script>
+</body>
+</html>

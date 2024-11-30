@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge: Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+
+    <style>
+        body {
+    background: linear-gradient(#667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    margin: 2em;
+}
+
+.fit-image{
+    display:flex;
+    text-align: center;
+    flex-wrap: wrap;
+
+    img{
+        margin: 1em;
+    }
+}
+
+.checked {
+    border: 5px solid #e5e7e9;
+}
+
+.checkmark {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 20px;
+    color: #154f88;
+    display: none;
+}
+
+.checked .checkmark {
+    display: block;
+}
+
+option{
+    background-color: rgb(0, 0, 0);
+}
+
+.text-red-500 {
+    color: #ffc107; /* changed to a shade of orange */
+    font-size: 1.2rem;
+}
+    </style>
+</head>
+<body class="relative flex items-center justify-center">
+    <div class="container mx-auto px-4 relative z-10">
+        <div id="login-card" class="glass-card rounded-2xl p-8 md:p-12 text-center text-white max-w-3xl mx-auto">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">SkillBridge</h1>
+            <h2 class="text-xl md:text-2xl mb-6">Login to Begin Your Journey</h2>
+
+            <form id="login-form">
+                <div class="flex flex-col mb-4">
+                    <label for="name" class="text-lg opacity-90 mb-2">Name</label>
+                    <input type="text" id="name" class="bg-transparent border-2 border-white rounded-lg py-2 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    <p id="name-error" class="text-red-500 text-sm"></p>
+                </div>
+                <div class="flex flex-col mb-4">
+                    <label for="school-name" class="text-lg opacity-90 mb-2">School Name</label>
+                    <input type="text" id="school-name" class="bg-transparent border-2 border-white rounded-lg py-2 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    <p id="school-name-error" class="text-red-500 text-sm"></p>
+                </div>
+                <div class="flex flex-col mb-4">
+                    <label for="age" class="text-lg opacity-90 mb-2">Age</label>
+                    <input type="number" id="age" class="bg-transparent border-2 border-white rounded-lg py-2 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    <p id="age-error" class="text-red-500 text-sm"></p>
+                </div>
+                <div class="flex flex-col mb-4">
+                    <label for="gender" class="text-lg opacity-90 mb-2">Gender</label>
+                    <select id="gender" class="bg-transparent border-2 border-white rounded-lg py-2 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Prefer not to say</option>
+                    </select>
+                    <p id="gender-error" class="text-red-500 text-sm"></p>
+                </div>
+                <div class="flex flex-col mb-4">
+                    <label for="email" class="text-lg opacity-90 mb-2">Email ID</label>
+                    <input type="email" id="email" class="bg-transparent border-2 border-white rounded-lg py-2 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    <p id="email-error" class="text-red-500 text-sm"></p>
+                </div>
+                <div class="flex flex-col mb-4">
+                    <label for="avatar" class="text-lg opacity-90 mb-2">Choose Avatar</label>
+                    <div class="flex space-x-4 fit-image">
+                        <img src="./assets/images/avtar1.jpg" alt="Avatar 1" class="rounded-full cursor-pointer" id="avatar-1">
+                        <img src="./assets/images/avtar2.jpg" alt="Avatar 2" class="rounded-full cursor-pointer" id="avatar-2">
+                        <img src="./assets/images/avtar3.jpg" alt="Avatar 3" class="rounded-full cursor-pointer" id="avatar-3">
+                        <img src="./assets/images/avtar4.jpg" alt="Avatar 4" class="rounded-full cursor-pointer" id="avatar-4">
+                        <img src="./assets/images/avtar5.jpg" alt="Avatar 5" class="rounded-full cursor-pointer" id="avatar-5">
+                        <img src="./assets/images/avtar6.jpg" alt="Avatar 6" class="rounded-full cursor-pointer" id="avatar-6">
+                        <img src="./assets/images/avtar7.jpg" alt="Avatar 7" class="rounded-full cursor-pointer" id="avatar-7">
+                        <img src="./assets/images/avtar8.jpg" alt="Avatar 8" class="rounded-full cursor-pointer" id="avatar-8">
+                        <img src="./assets/images/avtar9.jpg" alt="Avatar 9" class="rounded-full cursor-pointer" id="avatar-9">
+                        <img src="./assets/images/avtar10.jpg" alt="Avatar 10" class="rounded-full cursor-pointer" id="avatar-10">
+                        <img src="./assets/images/avtar11.jpg" alt="Avatar 11" class="rounded-full cursor-pointer" id="avatar-11">
+                        <img src="./assets/images/avtar12.jpg" alt="Avatar 12" class="rounded-full cursor-pointer" id="avatar-12">
+                        <img src="./assets/images/avtar13.jpg" alt="Avatar 13" class="rounded-full cursor-pointer" id="avatar-13">
+                        <img src="./assets/images/avtar14.jpg" alt="Avatar 14" class="rounded-full cursor-pointer" id="avatar-14">
+                    </div>
+                    <p id="avatar-error" class="text-red-500 text-sm"></p>
+                </div>
+
+                <input type="submit" value="Submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105" id="submit-btn">
+            </form>
+        </div>
+    </div>
+
+    <script src="./assets/js/setProfile.js"></script>
+    </body>
+</html>

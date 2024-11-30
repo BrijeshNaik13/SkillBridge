@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical MCQ Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            font-family: 'Orbitron', sans-serif;
+        }
+        .glowing-border {
+            border: 2px solid transparent;
+            background-image: linear-gradient(#1e293b, #1e293b), linear-gradient(135deg, #6366f1, #8b5cf6, #3b82f6);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+        .option-hover:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+    <div class="container mx-auto px-4 max-w-2xl">
+        <div id="quiz-container" class="bg-gray-800 rounded-2xl shadow-2xl glowing-border p-8 space-y-6">
+            <div id="progress-container" class="mb-4 bg-gray-700 rounded-full h-2.5 w-full">
+                <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 h-2.5 rounded-full" style="width: 0%;"></div>
+            </div>
+            
+            <div id="question-container" class="text-center">
+                <h1 id="question-text" class="text-2xl font-bold mb-6 text-gray-200"></h1>
+                
+                <div id="options-container" class="grid grid-cols-2 gap-4">
+                    <button id="option-a" class="option-hover bg-gray-700 text-gray-300 py-4 px-4 rounded-xl text-lg font-medium transition-all hover:bg-indigo-600"></button>
+                    <button id="option-b" class="option-hover bg-gray-700 text-gray-300 py-4 px-4 rounded-xl text-lg font-medium transition-all hover:bg-indigo-600"></button>
+                    <button id="option-c" class="option-hover bg-gray-700 text-gray-300 py-4 px-4 rounded-xl text-lg font-medium transition-all hover:bg-indigo-600"></button>
+                    <button id="option-d" class="option-hover bg-gray-700 text-gray-300 py-4 px-4 rounded-xl text-lg font-medium transition-all hover:bg-indigo-600"></button>
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center mt-6">
+                <div id="question-counter" class="text-gray-400 text-sm"></div>
+                <div class="flex items-center space-x-4">
+                    <div id="hints-left" class="text-gray-400 text-sm mr-4">Hints: 3</div>
+                    <button id="hint-btn" class="bg-purple-600 text-white py-2 px-4 rounded-lg text-sm hover:bg-purple-700 transition-all">
+                        Get Hint
+                    </button>
+                    <div id="timer" class="text-gray-400 text-sm"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="result-container" class="hidden text-center bg-gray-800 rounded-2xl p-8 space-y-6 glowing-border">
+            <h2 class="text-3xl font-bold text-gray-200">Quiz Completed!</h2>
+            <p id="score-text" class="text-2xl text-gray-300"></p>
+            <div id="result-details" class="text-gray-400"></div>
+            <button id="restart-btn" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 text-white py-3 px-6 rounded-xl text-lg font-medium hover:opacity-90 transition-all">
+                Restart Quiz
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the job of a doctor?",
+                options: [
+                    "To teach kids",
+                    "To cook food", 
+                    "To help people feel better",
+                    "To play games"
+                ],
+                correct: 2,
+                hint: "They work in hospitals and clinics to help patients"
+            },
+            {
+                question: "What do you call a person who takes care of sick people?",
+                options: [
+                    "Doctor",
+                    "Nurse", 
+                    "Teacher",
+                    "Chef"
+                ],
+                correct: 1,
+                hint: "They wear scrubs and assist doctors"
+            },
+            {
+                question: "Why do we go to the hospital?",
+                options: [
+                    "To play games",
+                    "To eat food",
+                    "To get treatment for illnesses or injuries",
+                    "To sleep"
+                ],
+                correct: 2,
+                hint: "It's a place for medical care and healing"
+            },
+            {
+                question: "What is a diagnosis?",
+                options: [
+                    "A treatment for an illness",
+                    "A way to prevent illnesses",
+                    "A doctor's conclusion about what is wrong with a patient",
+                    "A type of medicine"
+                ],
+                correct: 2,
+                hint: "It's when a doctor determines the specific health problem"
+            },
+            {
+                question: "Why do doctors wear gloves?",
+                options: [
+                    "To keep their hands warm",
+                    "To make themselves look cool",
+                    "To prevent the spread of germs",
+                    "To hold their pens"
+                ],
+                correct: 2,
+                hint: "It's about maintaining hygiene and preventing infection"
+            },
+            {
+                question: "What is a stethoscope?",
+                options: [
+                    "A tool used to listen to a patient's heartbeat",
+                    "A tool used to take a patient's temperature",
+                    "A tool used to give a patient a shot",
+                    "A tool used to examine a patient's eyes"
+                ],
+                correct: 0,
+                hint: "Doctors use this to hear sounds from inside the body"
+            },
+            {
+                question: "Why do doctors ask patients questions?",
+                options: [
+                    "To get to know them better",
+                    "To make them feel comfortable",
+                    "To help diagnose their illness or injury",
+                    "To make them laugh"
+                ],
+                correct: 2,
+                hint: "These questions help understand the patient's health condition"
+            },
+            {
+                question: "What is a prescription?",
+                options: [
+                    "A doctor's advice for staying healthy",
+                    "A doctor's instructions for taking medicine",
+                    "A doctor's diagnosis of an illness",
+                    "A doctor's recommendation for a hospital"
+                ],
+                correct: 1,
+                hint: "It tells you how to take specific medication"
+            },
+            {
+                question: "Why do doctors use thermometers?",
+                options: [
+                    "To measure a patient's height",
+                    "To measure a patient's weight",
+                    "To measure a patient's temperature",
+                    "To measure a patient's blood pressure"
+                ],
+                correct: 2,
+                hint: "It helps check if someone has a fever"
+            },
+            {
+                question: "What is a nurse?",
+                options: [
+                    "A doctor's assistant",
+                    "A doctor's boss",
+                    "A person who takes care of sick people",
+                    "A person who gives shots"
+                ],
+                correct: 2,
+                hint: "They provide direct patient care in hospitals"
+            },
+            {
+                question: "Why do doctors use X-rays?",
+                options: [
+                    "To take pictures of patients",
+                    "To show patients their bones",
+                    "To help diagnose illnesses or injuries",
+                    "To make patients feel better"
+                ],
+                correct: 2,
+                hint: "It helps see inside the body without cutting"
+            },
+            {
+                question: "What is a hospital?",
+                options: [
+                    "A place where people go to get healthy",
+                    "A place where people go to get sick",
+                    "A place where people go to get treated for illnesses or injuries",
+                    "A place where people go to play games"
+                ],
+                correct: 2,
+                hint: "A medical facility for treating patients"
+            },
+            {
+                question: "Why do doctors wear masks?",
+                options: [
+                    "To hide their faces",
+                    "To make themselves look cool",
+                    "To prevent the spread of germs",
+                    "To hold their pens"
+                ],
+                correct: 2,
+                hint: "It's about protecting patients from infections"
+            },
+            {
+                question: "What is a diagnosis?",
+                options: [
+                    "A treatment for an illness",
+                    "A way to prevent illnesses",
+                    "A doctor's conclusion about what is wrong with a patient",
+                    "A type of medicine"
+                ],
+                correct: 2,
+                hint: "Understanding the specific health problem"
+            },
+            {
+                question: "Why do doctors use blood pressure cuffs?",
+                options: [
+                    "To measure a patient's height",
+                    "To measure a patient's weight",
+                    "To measure a patient's blood pressure",
+                    "To measure a patient's temperature"
+                ],
+                correct: 2,
+                hint: "It checks the pressure of blood in arteries"
+            },
+            {
+                question: "What is a medical chart?",
+                options: [
+                    "A doctor's notes about a patient's illness",
+                    "A patient's medical history",
+                    "A doctor's instructions for taking medicine",
+                    "A patient's appointment schedule"
+                ],
+                correct: 0,
+                hint: "A record of a patient's medical information"
+            },
+            {
+                question: "Why do doctors ask patients about their medical history?",
+                options: [
+                    "To get to know them better",
+                    "To make them feel comfortable",
+                    "To help diagnose their illness or injury",
+                    "To make them laugh"
+                ],
+                correct: 2,
+                hint: "Past health information helps in current diagnosis"
+            },
+            {
+                question: "What is a pharmacy?",
+                options: [
+                    "A place where people go to get healthy",
+                    "A place where people go to get sick",
+                    "A place where people go to get medicine",
+                    "A place where people go to play games"
+                ],
+                correct: 2,
+                hint: "Where prescribed medications are dispensed"
+            },
+            {
+                question: "Why do doctors use medical equipment?",
+                options: [
+                    "To make themselves look cool",
+                    "To help diagnose illnesses or injuries",
+                    "To make patients feel better",
+                    "To take pictures of patients"
+                ],
+                correct: 1,
+                hint: "Tools to understand and treat health conditions"
+            },
+            {
+                question: "What is a doctor's most important tool?",
+                options: [
+                    "Stethoscope",
+                    "Thermometer", 
+                    "Blood pressure cuff",
+                    "Their brain and knowledge"
+                ],
+                correct: 3,
+                hint: "The ability to think, understand, and diagnose"
+            }
+        ];
+
+        class MedicalMCQQuiz {
+            constructor(questions) {
+                this.questions = questions;
+                this.currentQuestionIndex = 0;
+                this.score = 0;
+                this.timeLeft = 600; // 10 minutes
+                this.hintsLeft = 3;
+                
+                // DOM Elements
+                this.quizContainer = document.getElementById('quiz-container');
+                this.resultContainer = document.getElementById('result-container');
+                this.questionText = document.getElementById('question-text');
+                this.optionButtons = [
+                    document.getElementById('option-a'),
+                    document.getElementById('option-b'),
+                    document.getElementById('option-c'),
+                    document.getElementById('option-d')
+                ];
+                this.questionCounter = document.getElementById('question-counter');
+                this.timerDisplay = document.getElementById('timer');
+                this.progressBar = document.getElementById('progress-bar');
+                this.restartButton = document.getElementById('restart-btn');
+                this.scoreText = document.getElementById('score-text');
+                this.resultDetails = document.getElementById('result-details');
+                this.hintButton = document.getElementById('hint-btn');
+                this.hintsLeftDisplay = document.getElementById('hints-left');
+                
+                this.bindEvents();
+                this.loadQuestion();
+                this.startTimer();
+            }
+            
+            bindEvents() {
+                this.optionButtons.forEach((button, index) => {
+                    button.addEventListener('click', () => this.selectAnswer(index));
+                });
+                
+                this.restartButton.addEventListener('click', () => this.restartQuiz());
+                
+                this.hintButton.addEventListener('click', () => this.showHint());
+            }
+            
+            loadQuestion() {
+                // Reset button styles
+                this.optionButtons.forEach(button => {
+                    button.classList.remove('bg-green-600', 'bg-red-600');
+                    button.classList.add('bg-gray-700');
+                });
+
+                const current = this.questions[this.currentQuestionIndex];
+                this.questionText.textContent = current.question;
+                
+                // Update options
+                this.optionButtons.forEach((button, index) => {
+                    button.textContent = current.options[index];
+                    button.disabled = false;
+                });
+                
+                // Update question counter
+                this.questionCounter.textContent = `Question ${this.currentQuestionIndex + 1} of ${this.questions.length}`;
+                
+                // Update progress bar
+                const progress = ((this.currentQuestionIndex + 1) / this.questions.length) * 100;
+                this.progressBar.style.width = `${progress}%`;
+                
+                // Update hint button
+                this.hintButton.disabled = this.hintsLeft === 0;
+                this.hintsLeftDisplay.textContent = `Hints: ${this.hintsLeft}`;
+            }
+            
+            selectAnswer(selectedIndex) {
+                const current = this.questions[this.currentQuestionIndex];
+                
+                // Disable further selections
+                this.optionButtons.forEach(button => button.disabled = true);
+                
+                if (selectedIndex === current.correct) {
+                    this.score++;
+                    this.optionButtons[selectedIndex].classList.add('bg-green-600');
+                } else {
+                    // Highlight selected wrong answer in red
+                    this.optionButtons[selectedIndex].classList.add('bg-red-600');
+                    // Highlight correct answer in green
+                    this.optionButtons[current.correct].classList.add('bg-green-600');
+                }
+                
+                // Move to next question after a short delay
+                setTimeout(() => {
+                    this.currentQuestionIndex++;
+                    
+                    if (this.currentQuestionIndex < this.questions.length) {
+                        this.loadQuestion();
+                    } else {
+                        this.endQuiz();
+                    }
+                }, 1000);
+            }
+            
+            startTimer() {
+                this.timerInterval = setInterval(() => {
+                    const minutes = Math.floor(this.timeLeft / 60);
+                    const seconds = this.timeLeft % 60;
+                    
+                    this.timerDisplay.textContent = `Time: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                    
+                    if (this.timeLeft <= 0) {
+                        this.endQuiz();
+                    } else {
+                        this.timeLeft--;
+                    }
+                }, 1000);
+            }
+            
+            showHint() {
+    if (this.hintsLeft > 0) {
+        const current = this.questions[this.currentQuestionIndex];
+        
+        // Create a modal-like hint overlay
+        const hintOverlay = document.createElement('div');
+        hintOverlay.classList.add(
+            'fixed', 'inset-0', 'bg-black', 'bg-opacity-50', 
+            'flex', 'items-center', 'justify-center', 'z-50'
+        );
+        
+        const hintBox = document.createElement('div');
+        hintBox.classList.add(
+            'bg-gray-800', 'p-6', 'rounded-xl', 'text-center', 
+            'max-w-md', 'w-full', 'mx-4', 'glowing-border'
+        );
+        
+        const hintTitle = document.createElement('h2');
+        hintTitle.classList.add('text-2xl', 'font-bold', 'text-gray-200', 'mb-4');
+        hintTitle.textContent = 'Hint';
+        
+        const hintText = document.createElement('p');
+        hintText.classList.add('text-gray-300', 'mb-6');
+        hintText.textContent = current.hint;
+        
+        const closeButton = document.createElement('button');
+        closeButton.classList.add(
+            'bg-purple-600', 'text-white', 'py-2', 'px-6', 'rounded-lg', 
+            'hover:bg-purple-700', 'transition-all'
+        );
+        closeButton.textContent = 'Close';
+        
+        // Close the hint and remove the overlay
+        closeButton.addEventListener('click', () => {
+            document.body.removeChild(hintOverlay);
+            
+            // Decrement hints and update display
+            this.hintsLeft--;
+            this.hintsLeftDisplay.textContent = `Hints: ${this.hintsLeft}`;
+            
+            // Disable hint button if no hints left
+            if (this.hintsLeft === 0) {
+                this.hintButton.disabled = true;
+                this.hintButton.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        });
+        
+        // Construct the hint overlay
+        hintBox.appendChild(hintTitle);
+        hintBox.appendChild(hintText);
+        hintBox.appendChild(closeButton);
+        hintOverlay.appendChild(hintBox);
+        
+        // Add to the body
+        document.body.appendChild(hintOverlay);
+    }
+}
+            endQuiz() {
+                // Stop the timer
+                
+                clearInterval(this.timerInterval);
+                
+                // Hide quiz container
+                this.quizContainer.classList.add('hidden');
+                
+                // Show result container
+                this.resultContainer.classList.remove('hidden');
+                
+                // Calculate and display score
+                const percentage = Math.round((this.score / this.questions.length) * 100);
+                this.scoreText.textContent = `Your Score: ${this.score} / ${this.questions.length} (${percentage}%)`;
+                
+                // Provide result details
+                let resultMessage = '';
+                if (percentage === 100) {
+                    resultMessage = 'Perfect score! You are a medical knowledge champion!';
+                } else if (percentage >= 80) {
+                    resultMessage = 'Great job! You have an excellent understanding of medical basics.';
+                } else if (percentage >= 60) {
+                    resultMessage = 'Good effort! You have a solid understanding of medical concepts.';
+                } else {
+                    resultMessage = 'Keep learning! There\'s more to explore in the medical world.';
+                }
+                
+                this.resultDetails.textContent = resultMessage;
+            }
+            
+            restartQuiz() {
+                // Reset all quiz state
+                this.currentQuestionIndex = 0;
+                this.score = 0;
+                this.timeLeft = 600;
+                this.hintsLeft = 3;
+                
+                // Hide result container
+                this.resultContainer.classList.add('hidden');
+                
+                // Show quiz container
+                this.quizContainer.classList.remove('hidden');
+                
+                // Reload first question and start timer
+                this.loadQuestion();
+                this.startTimer();
+            }
+        }
+
+        // Initialize the quiz when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new MedicalMCQQuiz(questions);
+        });
+    </script>
+</body>
+</html>

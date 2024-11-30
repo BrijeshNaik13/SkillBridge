@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge: Domain Selection</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(#667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 2em;
+        }
+        
+        .card {
+            background-color: #fff;
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            height: 300px;
+        }
+        
+        .card:hover {
+            transform: scale(1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .hidden-content {
+            display: none;
+            transition: all 0.3s ease;
+            padding: 1rem;
+            background-color: #f7f7f7;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            height: 150px;
+            overflow-y: auto;
+            opacity: 0;
+        }
+        
+        .card:hover .hidden-content {
+            display: block;
+            animation: fadeIn 0.5s forwards;
+        }
+        
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        {
+            text-decoration: dashed;
+        }
+        #classr{
+            text-decoration: underline;
+            color: blue;
+        }
+    </style>
+</head>
+<body class="relative flex items-center justify-center">
+    <div class="container mx-auto px-4 relative z-10">
+        <h1 class="text-4xl md:text-6xl font-bold mb-4 text-white">Select Your Domain</h1>
+        <div class="flex justify-center space-x-4">
+            <div class="card w-80 h-48 flex flex-col justify-center items-center">
+                <i class="fas fa-graduation-cap text-blue-500 mb-8"></i>
+                <a href="educationalfieldgames.html">
+                <button class="button" id="educational-button">Educational</button></a>
+                <div class="hidden-content mt-4">
+                    <p class="text-gray-600 text-sm">Explore the world of education and learning</p>
+                    <p class="text-gray-600 text-sm">Example: Teacher, Professor, Researcher</p>
+                    <p class="text-gray-600 text-sm">Discover new opportunities in educational institutions</p>
+                    <p class="text-gray-600 text-sm">Develop skills in curriculum development, instructional design, and educational technology..Still confused click to know <a href="educationalblog.html"id="classr">more</a></p>
+                </div>
+            </div>
+            <div class="card w-80 h-48 flex flex-col justify-center items-center">
+                <i class="fas fa-briefcase text-blue-500 mb-4"></i>
+                <a href="noneducationalfieldgames.html">
+                <button class="button" id="non-educational-button">Non-Educational</button></a>
+                <div class="hidden-content mt-4">
+                    <p class="text-gray-600 text-sm">Explore the world of work and industry</p>
+                    <p class="text-gray-600 text-sm">Example: Developer, Designer, Entrepreneur</p>
+                    <p class="text-gray-600 text-sm">Discover new opportunities in various industries</p>
+                    <p class="text-gray-600 text-sm">Develop skills in project management, leadership, and communication...Still confused click to know <a href="noneducationalblog.html"id="classr">more</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const educationalButton = document.getElementById('educational-button');
+        const nonEducationalButton = document.getElementById('non-educational-button');
+
+        educationalButton.addEventListener('click', () => {
+            // Add logic for educational domain selection
+            console.log('Educational domain selected');
+        });
+
+        nonEducationalButton.addEventListener('click', () => {
+            // Add logic for non-educational domain selection
+            console.log('Non-educational domain selected');
+        });
+    </script>
+</body>
+</html>
